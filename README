@@ -1,0 +1,31 @@
+These are Python programs to accompany the paper "Improved quantum query algorithms for triangle 
+finding and associativity testing" by Lee, Magniez, and Santha.
+
+In that paper a family of algorithms is given for detecting a subgraph in a graph.  The 
+algorithm depends on a loading schedule, the order in which vertices and edges of the subgraph 
+are loaded, and a bunch of set size and degree parameters.  The programs provided here 
+find the optimal loading schedule and setting of the parameters.
+
+Fix a loading schedule.  Each step of the loading schedule incurs a cost in terms of the 
+set size and degree parameters of the algorithm.  To minimize the overall cost of the algorithm 
+we want to minimize the the maximum of these costs.  We think of each parameter as being 
+a power of n, the number of vertices in the graph, and want to determine the exponent.  By 
+taking the logarithm of all the cost equations, we obtain a linear program.  
+
+The file lg_algo.py sets up this linear program, given a subgraph and a loading schedule.  
+To solve the linear programs the package PyMathProg is used, which is available at 
+
+http://pymprog.sourceforge.net/
+
+The file search_sched.py searches over all possible loading schedules for a given subgraph, 
+and then uses the functions in lg_algo to set up and solve the corresponding linear program.  
+It returns the best objective value found a schedule and setting of parameters that achieves it.
+
+For larger subgraphs, searching over all schedules can take a while.  The program fast_search.py 
+uses a more limited search space where first all vertices are loaded and then all edges.  
+In all cases I have seen there is an optimal schedule of this form, though I don't know how 
+to prove this.
+
+Known issue: The program does not enforce the third condition in the definition of 
+admissible parameters.  Thus it should always be checked when the program returns that the 
+parameters actually are admissible.
