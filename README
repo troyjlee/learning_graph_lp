@@ -67,3 +67,11 @@ and parameters.
 KNOWN ISSUES: The program does not enforce the third condition in the 
 definition of admissible parameters.  Thus it should always be checked 
 when the program returns that the parameters actually are admissible.
+
+The optimization done by the program is not as general as the theorem given
+in our paper.  In particular, we assume that every edge is loaded in the 
+dense regime except the last one which is loaded in the sparse regime.  
+It is without loss of generality that the last edge is loaded in the 
+sparse regime, but it could be the case that other edges are loaded 
+in the sparse regime, in which case the program would overestimate the 
+complexity of that step.
