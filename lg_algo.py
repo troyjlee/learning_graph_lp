@@ -72,6 +72,17 @@ def load_vertex(A, b, a, vertices_loaded, edges_loaded, graph, n):
 # given vertices_loaded and edges_loaded
 def load_edge(A, b, ab, vertices_loaded, edges_loaded, graph, n):
     (nterm, row) = vertex_ratio(vertices_loaded, edges_loaded, graph, n)
+    row2 = deepcopy(row)
+    row[ab[0]] += 1
+    A.append(row)
+    b.append(nterm)
+    row2[ab[1]] += 1
+    A.append(row2)
+    b.append(nterm)
+    return A, b
+
+def last_edge(A, b, ab, vertices_loaded, edges_loaded, graph, n):
+    (nterm, row) = vertex_ratio(vertices_loaded, edges_loaded, graph, n)
     row[ab[0]] += 0.5
     row[ab[1]] += 0.5
     A.append(row)
@@ -136,7 +147,7 @@ def find_params(graph, n, schedule):
     (A, b) = setup(graph, n)
     vertices_loaded = []
     edges_loaded = []
-    for x in schedule:
+    for x in schedule[:-1]:
         if type(x) == int:
             (A, b) = load_vertex(A, b, x, vertices_loaded, edges_loaded, graph, n)
             vertices_loaded.append(x)
@@ -146,6 +157,7 @@ def find_params(graph, n, schedule):
         else:
             print 'error in schedule'
             break
+    (A, b) = last_edge(A, b, schedule[-1], vertices_loaded, edges_loaded, graph, n)
     numvars = 1 + n + 2*len(graph)
     param = solve_prog(A, b, numvars)
     return param
@@ -191,7 +203,7 @@ fourclique = {(1,2):1, (1,3):2, (1,4):3, (1,5):4, (2,3):5, (2,4):6, (2,5):7, (3,
 
 # the schedule gives the order to load the vertices and edges
 # here are some sample schedules
-assoc_schedule = [1, 2, 4, 3, 5, (2,1), (2,3), (3,4), (5,4)]
+assoc_schedule = [1, 2, 4, 3, (2,1), (2,3), (3,4), 5, (5,4)]
 tri_schedule = [1, 2, 3, (1,2), (2,3), (1,3)]
 five_schedule = [1, 2, 3, 4, 5, (1,2), (1,3), (1,4), (1,5), (2,3), (2,4), (2,5), (3,4), (3,5), (4,5)]
 
@@ -200,8 +212,8 @@ five_schedule = [1, 2, 3, 4, 5, (1,2), (1,3), (1,4), (1,5), (2,3), (2,4), (2,5),
 if __name__ == '__main__':
     # modify the next two lines to set the input graph and 
     # the loading schedule
-    graph = triangle
-    schedule = tri_schedule
+    graph = assoc
+    schedule = assoc_schedule
 
     # the next few lines determine the number of vertices from the graph
     vertices = []
