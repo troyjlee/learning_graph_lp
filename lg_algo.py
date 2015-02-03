@@ -200,28 +200,29 @@ triangle = { (1,2) : 1, (1,3) : 2, (2,3) : 3}
 assoc = {(2,1):1, (2,3):2, (3,4):3, (5,4):4}
 dist = {(1,2):1, (2,3):2, (1,3):3, (4,3):4, (5,6):5}
 fourclique = {(1,2):1, (1,3):2, (1,4):3, (1,5):4, (2,3):5, (2,4):6, (2,5):7, (3,4):8, (3,5):9, (4,5):10}
+five_path = {(1,2):1, (2,3):2, (3,4):3, (4,5):4, (5,6):5}
 
 # the schedule gives the order to load the vertices and edges
 # here are some sample schedules
 assoc_schedule = [1, 2, 4, 3, (2,1), (2,3), (3,4), 5, (5,4)]
 tri_schedule = [1, 2, 3, (1,2), (2,3), (1,3)]
-five_schedule = [1, 2, 3, 4, 5, (1,2), (1,3), (1,4), (1,5), (2,3), (2,4), (2,5), (3,4), (3,5), (4,5)]
+five_schedule = [1, 2, 4, 3, 6, 5, (1,2), (2,3), (3,4), (4,5), (5,6)]
 
 ###################
 
 if __name__ == '__main__':
     # modify the next two lines to set the input graph and 
     # the loading schedule
-    graph = assoc
-    schedule = assoc_schedule
+    graph = five_path 
+    schedule = five_schedule
 
     # the next few lines determine the number of vertices from the graph
     vertices = []
     for e in graph:
         if e[0] not in vertices: 
             vertices.append(e[0])
-    if e[1] not in vertices:
-        vertices.append(e[1])
+        if e[1] not in vertices:
+            vertices.append(e[1])
     n = len(vertices)
  
     param = find_params(graph, n, schedule)
